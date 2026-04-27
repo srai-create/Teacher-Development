@@ -1,0 +1,1454 @@
+``html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Development Programme</title>
+    <style>
+        / ==================== CSS Reset & Base Styles ==================== /
+        , ::before, ::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --primary-blue: #4A90A4;
+            --light-blue: #E8F4F8;
+            --accent-blue: #5BA3B8;
+            --dark-grey: #2C3E50;
+            --medium-grey: #5D6D7E;
+            --light-grey: #F5F7FA;
+            --border-grey: #D5DBDB;
+            --white: #FFFFFF;
+            --shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 4px 16px rgba(0, 0, 0, 0.12);
+            --radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--light-grey);
+            color: var(--dark-grey);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        / ==================== Header ==================== /
+        header {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-blue) 100%);
+            color: var(--white);
+            padding: 48px 24px;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        / ==================== Main Container ==================== /
+        main {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 32px 24px 64px;
+        }
+
+        / ==================== Progress Overview ==================== /
+        .progress-overview {
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 32px;
+            box-shadow: var(--shadow);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .progress-text {
+            font-size: 1rem;
+            color: var(--medium-grey);
+        }
+
+        .progress-text strong {
+            color: var(--primary-blue);
+            font-size: 1.25rem;
+        }
+
+        .progress-bar-container {
+            flex: 1;
+            min-width: 200px;
+            max-width: 300px;
+            height: 8px;
+            background: var(--light-grey);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-blue), var(--accent-blue));
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        / ==================== Module Cards ==================== /
+        .module {
+            background: var(--white);
+            border-radius: var(--radius);
+            margin-bottom: 16px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .module:hover {
+            box-shadow: var(--shadow-hover);
+        }
+
+        .module-header {
+            padding: 24px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--white);
+            border-bottom: 1px solid transparent;
+            transition: var(--transition);
+        }
+
+        .module-header:hover {
+            background: var(--light-blue);
+        }
+
+        .module.active .module-header {
+            border-bottom-color: var(--border-grey);
+            background: var(--light-blue);
+        }
+
+        .module-title-group {
+            flex: 1;
+        }
+
+        .module-number {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--primary-blue);
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .module-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--dark-grey);
+            margin-bottom: 4px;
+        }
+
+        .module-description {
+            font-size: 0.9rem;
+            color: var(--medium-grey);
+        }
+
+        .module-toggle {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--light-grey);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            flex-shrink: 0;
+            margin-left: 16px;
+        }
+
+        .module.active .module-toggle {
+            background: var(--primary-blue);
+            transform: rotate(180deg);
+        }
+
+        .module-toggle svg {
+            width: 16px;
+            height: 16px;
+            fill: var(--medium-grey);
+            transition: var(--transition);
+        }
+
+        .module.active .module-toggle svg {
+            fill: var(--white);
+        }
+
+        .module-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+
+        .module.active .module-content {
+            max-height: 3000px;
+        }
+
+        .module-inner {
+            padding: 0 24px 24px;
+        }
+
+        / ==================== Sections within Modules ==================== /
+        .section {
+            margin-top: 24px;
+        }
+
+        .section-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--primary-blue);
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--light-blue);
+        }
+
+        .section-content {
+            color: var(--dark-grey);
+            font-size: 0.95rem;
+        }
+
+        .section-content p {
+            margin-bottom: 12px;
+        }
+
+        .section-content ul {
+            margin-left: 20px;
+            margin-bottom: 12px;
+        }
+
+        .section-content li {
+            margin-bottom: 6px;
+        }
+
+        / ==================== Checklist ==================== /
+        .checklist {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 12px;
+            margin-bottom: 8px;
+            background: var(--light-grey);
+            border-radius: 8px;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .checklist-item:hover {
+            background: var(--light-blue);
+        }
+
+        .checklist-item.completed {
+            background: #E8F5E9;
+        }
+
+        .checklist-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            cursor: pointer;
+            accent-color: var(--primary-blue);
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .checklist-item label {
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .checklist-item.completed label {
+            color: var(--medium-grey);
+            text-decoration: line-through;
+        }
+
+        / ==================== Rehearsal Tasks ==================== /
+        .task {
+            background: var(--light-blue);
+            border-left: 4px solid var(--primary-blue);
+            padding: 16px;
+            margin-bottom: 12px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .task-number {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--primary-blue);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .task-content {
+            color: var(--dark-grey);
+        }
+
+        / ==================== Reflection Section ==================== /
+        .reflection-prompts {
+            margin-bottom: 16px;
+        }
+
+        .reflection-prompt {
+            font-size: 0.9rem;
+            color: var(--medium-grey);
+            font-style: italic;
+            margin-bottom: 6px;
+            padding-left: 16px;
+            position: relative;
+        }
+
+        .reflection-prompt::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: var(--primary-blue);
+        }
+
+        .reflection-textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 16px;
+            border: 2px solid var(--border-grey);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            resize: vertical;
+            transition: var(--transition);
+            background: var(--white);
+        }
+
+        .reflection-textarea:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(74, 144, 164, 0.1);
+        }
+
+        .reflection-textarea::placeholder {
+            color: var(--border-grey);
+        }
+
+        / ==================== Buttons ==================== /
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-blue);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--light-grey);
+            color: var(--medium-grey);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border-grey);
+        }
+
+        .module-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-grey);
+            flex-wrap: wrap;
+        }
+
+        / ==================== Save Notification ==================== /
+        .save-notification {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--dark-grey);
+            color: var(--white);
+            padding: 16px 24px;
+            border-radius: 8px;
+            box-shadow: var(--shadow-hover);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: var(--transition);
+            z-index: 1000;
+        }
+
+        .save-notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        / ==================== Footer ==================== /
+        footer {
+            text-align: center;
+            padding: 32px 24px;
+            color: var(--medium-grey);
+            font-size: 0.875rem;
+        }
+
+        / ==================== Responsive Design ==================== /
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.75rem;
+            }
+
+            header p {
+                font-size: 1rem;
+            }
+
+            main {
+                padding: 24px 16px 48px;
+            }
+
+            .module-header {
+                padding: 20px;
+            }
+
+            .module-title {
+                font-size: 1.1rem;
+            }
+
+            .module-inner {
+                padding: 0 20px 20px;
+            }
+
+            .progress-overview {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .progress-bar-container {
+                max-width: 100%;
+            }
+
+            .module-actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ==================== Header ==================== -->
+    <header>
+        <h1>Teacher Development Programme</h1>
+        <p>Incremental improvement through focused practice</p>
+    </header>
+
+    <!-- ==================== Main Content ==================== -->
+    <main>
+        <!-- Progress Overview -->
+        <div class="progress-overview">
+            <div class="progress-text">
+                Overall Progress: <strong id="overall-progress">0%</strong>
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progress-bar" style="width: 0%"></div>
+            </div>
+            <button class="btn btn-secondary" onclick="clearAllProgress()">Reset All</button>
+        </div>
+
+        <!-- Module 1: Behaviour for Learning -->
+        <div class="module" data-module="1">
+            <div class="module-header" onclick="toggleModule(1)">
+                <div class="module-title-group">
+                    <div class="module-number">Module 1</div>
+                    <h2 class="module-title">Behaviour for Learning</h2>
+                    <p class="module-description">Creating a calm, focused classroom environment where learning can flourish</p>
+                </div>
+                <div class="module-toggle">
+                    <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                </div>
+            </div>
+            <div class="module-content">
+                <div class="module-inner">
+                    <!-- Key Learning -->
+                    <div class="section">
+                        <h3 class="section-title">Key Learning</h3>
+                        <div class="section-content">
+                            <p>Effective behaviour management is the foundation of great teaching. Without a calm, orderly environment, even the best-planned lessons will struggle to have impact. Research consistently shows that teachers who establish clear expectations and routines from the outset spend less time managing behaviour and more time teaching.</p>
+                            <ul>
+                                <li><strong>Consistency is key:</strong> Students thrive when they know what to expect. Inconsistent responses to behaviour create uncertainty and anxiety.</li>
+                                <li><strong>Warm-strict approach:</strong> The most effective teachers combine genuine warmth and care with firm, non-negotiable boundaries.</li>
+                                <li><strong>Prevention over reaction:</strong> 90% of behaviour management happens before any misbehaviour occurs—through careful planning, clear systems, and positive relationships.</li>
+                                <li><strong>Least invasive intervention:</strong> Address low-level disruption with the smallest intervention possible to maintain lesson flow.</li>
+                            </ul>
+                            <p>Remember: behaviour is a skill that can be taught, not just a problem to be managed. When students struggle behaviourally, they need teaching, practice, and feedback—just like any other skill.</p>
+                        </div>
+                    </div>
+
+                    <!-- Checklist -->
+                    <div class="section">
+                        <h3 class="section-title">Implementation Checklist</h3>
+                        <ul class="checklist">
+                            <li class="checklist-item">
+                                <input type="checkbox" id="m1-c1" onchange="saveProgress()">
+                                <label for="m1-c1">I have established clear entry and exit routines for my classroom</label>
+                            </li>
+                            <li class="checklist-item">
+                                <input type="checkbox" id="m1-c2" onchange="saveProgress()">
+                                <label for="m1-c2">I use consistent signals for gaining whole-class attention</label>
+                            </li>
+                            <li class="checklist-item">
+                                <input type="checkbox" id="m1-c3" onchange="saveProgress()">
+                                <label for="m1-c3">I position myself strategically to monitor the whole room</label>
+                            </li>
+                            <li class="checklist-item">
+                                <input type="checkbox" id="m1-c4" onchange="saveProgress()">
+                                <label for="m1-c4">I address low-level disruption with minimal intervention</label>
+                            </li>
+                            <li class="checklist-item">
+                                <input type="checkbox" id="m1-c5" onchange="saveProgress()">
+                                <label for="m1-c5">I use positive framing when giving instructions</label>
+                            </li>
+                            <li class="checklist-item">
+                                <input type="checkbox" id="m1-c6" onchange="saveProgress()">
+                                <label for="m1-c6">I narrate positive behaviour I want to see more of</label>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Rehearsal Tasks -->
+                    <div class="section">
+                        <h3 class="section-title">Rehearsal Tasks</h3>
+                        <div class="task">
+                            <div class="task-number">Task 1</div>
+                            <div class="task-content">Script and practise your attention signal. Choose a consistent phrase and action (e.g., "3-2-1, eyes on me" with hand raised). Rehearse in front of a mirror, focusing on calm authority and clear expectations. Use it consistently for one full week.</div>
+                        </div>
+                        <div class="task">
+                            <div class="task-number">Task 2</div>
+                            <div class="task-content">During your next lesson, position yourself so you can see all students at all times. Move around the room during independent work, using proximity to prevent off-task behaviour before it escalates.</div>
+                        </div>
+                        <div class="task">
+                            <div class="task-number">Task 3</div>
+                            <div class="task-content">Practise "positive framing" by converting three negative instructions into positive ones. Instead of "Don't call out," try "Put your hand up to share your answer." Record your reframed instructions and use them in class.</div>
+                        </div>
+                    </div>
+
+                    <!-- Reflection -->
+                    <div class="section">
+                        <h3 class="section-title">Reflection</h3>
+                        <div class="reflection-prompts">
+                            <p class="reflection-prompt">What worked well when implementing these strategies?</p>
+                            <p class="reflection-prompt">What will I refine or adjust next time?</p>
+                            <p class="reflection-prompt">What questions do I still have about behaviour management?</p>
+                        </div>
+                        <textarea class="reflection-textarea" id="reflection-1" placeholder="Write your reflections here..." oninput="saveProgress()"></textarea>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="module-actions">
+                        <button class="btn btn-primary" onclick="saveModuleProgress(1)">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
+                            Save Progress
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Module 2: Explaining & Modelling -->
+        <div class="module" data-module="2">
+            <div class="module-header" onclick="toggleModule(2)">
+                <div class="module-title-group">
+                    <div class="module-number">Module 2</div>
+                    <h2 class="module-title">Explaining & Modelling</h2>
+                    <p class="module-description">Making complex ideas clear through structured explanations and worked examples</p>
+                </div>
+                <div class="module-toggle">
+                    <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                </div>
+            </div>
+            <div class="module-content">
+                <div class="module-inner">
+                    <!-- Key Learning -->
+                    <div class="section">
+                        <h3 class="section-title">Key Learning</h3>
+                        <div class="section-content">
+                            <p>Clear explanations are the bridge between confusion and understanding. Expert teachers break down complex ideas into digestible chunks, use concrete examples, and think aloud to reveal the hidden processes that experts often take for granted.</p>
+                            <ul>
+                                <li><strong>Manage cognitive load:</strong> Working memory is limited. Present information in small, sequential steps to avoid overwhelming students.</li>
+                                <li><strong>Use dual coding:</strong> Combine verbal explanations with visual representations. When words and images work together, learning is stronger.</li>
+                                <li><strong>Think aloud:</strong> Make your expert thinking visible. Narrate your decision-making process when solving problems or analysing texts.</li>
+                                <li><strong>Concrete before abstract:</strong> Start with tangible examples before introducing abstract concepts. Anchor new learning to familiar contexts.</li>
+                            </ul>
+                            <p>The goal is not to simplify content but to make the path to understanding clearer. Great explanations respect students' intelligence while acknowledging their current knowledge gaps.</p>
+                        </div>
+                    </div>
+
+                    <!-- Checklist -->
+                    <div class="section">
+                        <h3 class="section-title">Implementation Checklist</h3>
+                        <ul class="checklist">
+                            <li class="checklist-item">
+                                <input type="checkbox" id="m2-c1" onchange="saveProgress()">
+                                <label for="m2-c1">I plan my explanations in advance, identifying the key steps</label>
+                            </li>
+                            <li class="checklist-item">
+                                <input type="checkbox" id="m2-c2" onchange="saveProgress()">
+                                <label for="m2-c2">I use visual aids to support verbal explanations</label>
+                            </li>
+                            <li class="checklist-item">
+                                <input type="checkbox" id="m2-c3" onchange="saveProgress()">
+                                <label for="m2-c3">I model worked examples before asking students to practise</label>
+                            </li>
+                            <li class="checklist-item">
+                                <input type="checkbox" id="m2-c4" onchange="saveProgress()">
+                                <label for="m2-c4">I use analogies and concrete examples to explain abstract ideas</label>
+                            </li>
+                            <li class="checklist-item">
+                                <input type="checkbox" id="m2-c5" onchange="saveProgress()">
+                                <label for="m2-c5">I check for understanding during explanations, not just after</label>
+                            </li>
+                            <li class="checklist-item">
+                                <input type="checkbox" id="m2-c6" onchange="saveProgress()">
+                                <label for="m2-c6">I anticipate and address common misconceptions</label>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Rehearsal Tasks -->
+                    <div class="section">
+                        <h3 class="section-title">Rehearsal Tasks</h3>
+                        <div class="task">
+                            <div class="task-number">Task 1</div>
+                            <div class="task-content">Select a concept you'll teach this week. Write out your explanation in full, then cut it by 30%. Identify the essential steps and remove anything that doesn't directly support understanding.</div>
+                        </div>
+                        <div class="task">
+                            <div class="task-number">Task 2</div>
+                            <div class="task-content">Create a live model for one key skill or process. Practise thinking aloud as you work through it, narrating every decision. Record yourself and listen back—are there any steps you skipped or assumed?</div>
+                        </div>
+                        <div class="task">
+                            <div class="task-number">Task 3</div>
+                            <div class="task-content">Develop one strong analogy for an abstract concept in your subject. Test it with students and refine based on their responses. Does it illuminate or confuse?</div>
+                        </div>
+                    </div>
+
+                    <!-- Reflection -->
+                    <div class="section">
+                        <h3 class="section-title">Reflection</h3>
+                        <div class="reflection-prompts">
+                            <p class="reflection-prompt">What worked well when implementing these strategies?</p>
+                            <p class="reflection-prompt">What will I refine or adjust next time?</p>
+                            <p class="reflection-prompt">What questions do I still have about explaining and modelling?</p>
+                        </div>
+                        <textarea class="reflection-textarea" id="reflection-2" placeholder="Write your reflections here..." oninput="saveProgress()"></textarea>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="module-actions">
+                        <button class="btn btn-primary" onclick="saveModuleProgress(2)">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
+                            Save Progress
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Module 3: Questioning -->
+        <div class="module" data-module="3">
+            <div class="module-header" onclick="toggleModule(3)">
+                <div class="module-title-group">
+                    <div class="module-number">Module 3</div>
+                    <h2 class="module-title">Questioning</h2>
+                    <p class="module-description">Using strategic questions to check understanding, deepen thinking, and involve all learners</p>
+                </div>
+                <div class="module-toggle">
+                    <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                </div>
+            </div>
+            <div class="module-content">
+                <div class="module-inner">
+                    <!-- Key Learning -->
+                    <div class="section">
+                        <h3 class="section-title">Key Learning</h3>
+                        <div class="section-content">
+                            <p>Questions are the engine of learning. Effective questioning helps teachers check understanding, pushes students to think more deeply, and ensures all learners are actively engaged—not just the confident few who raise their hands.</p>
+                            <ul>
+                                <li><strong>Cold call:</strong> Call on students regardless of whether their hand is raised. This keeps everyone alert and distributes participation equitably.</li>
+                                <li><strong>Wait time:</strong> Pause for 3-5 seconds after asking a question. This dramatically increases the quality and length of student responses.</li>
+                                <li><strong>Plan key questions:</strong> Your most important questions should be scripted in advance, not improvised. Think carefully about wording and sequence.</li>
+                                <li><strong>Probe and extend:</strong> Follow up initial answers with "Why?", "How do you know?", or "Can you give an example?" to push thinking deeper.</li>
+                            </ul>
+                            <p>The purpose of questioning is not to catch students out, but to help them—and you—understand what they know, what they're confused about, and what they need to learn next.</p>
+                        </div>
+                    </div>
+
+                    <!-- Checklist -->
+                    <div class="section">
+                        <h3 class="section-title">Implementation Checklist</h3>
+                        <ul class="checklist">
+                            <li class="checklist-item">
+                                <input type="checkbox" id="m3-c1" onchange="saveProgress()">
+                                <label for="m3-c1">I plan 3-5 key questions for each lesson in advance</label>
+                            </li>
+                            <li class="checklist-item">
+                                <input type="checkbox" id="m3-c2" onchange="saveProgress()">
+                                <label for="m3-c2">I use cold call to involve all students, not just volunteers</label>
+                            </li>
+                            <li class="checklist-item">
+                                <input type="checkbox" id="m3-c3" onchange="saveProgress()">
+                                <label for="m3-c3">I provide adequate wait time before accepting responses</label>
+                            </li>
+                            <li class="checklist-item">
+                                <input type="checkbox" id="m3-c4" onchange="saveProgress()">
+                                <label for="m3-c4">I use follow-up questions to probe and extend thinking</label>
+                            </li>
+                            <li class="checklist-item">
+                                <input type="checkbox" id="m3-c5" onchange="saveProgress()">
+                                <label for="m3-c5">I track who I question to ensure equitable participation</label>
+                            </li>
+                            <li class="checklist-item">
+                                <input type="checkbox" id="m3-c6" onchange="saveProgress()">
+                                <label for="m3-c6">I respond to wrong answers in ways that maintain student dignity</label>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Rehearsal Tasks -->
+                    <div class="section">
+                        <h3 class="section-title">Rehearsal Tasks</h3>
+                        <div class="task">
+                            <div class="task-number">Task 1</div>
+                            <div class="task-content">Plan five key questions for your next lesson—the questions that will reveal whether students truly understand. Script the exact wording. After the lesson, note which questions worked well and why.</div>
+                        </div>
+                        <div class="task">
+                            <div class="task-number">Task 2</div>
+                            <div class="task-content">Commit to using cold call for an entire lesson. Pose the question, pause, then name the student. Notice the difference in whole-class attention compared to hands-up questioning.</div>
+                        </div>
+                        <div class="task">
+                            <div class="task-number">Task 3</div>
+                            <div class="task-content">Practise extending student responses by preparing three follow-up stems: "Why do you think that?", "Can you give me an example?", "What makes you say that?" Use each at least twice in your next lesson.</div>
+                        </div>
+                    </div>
+
+                    <!-- Reflection -->
+                    <div class="section">
+                        <h3 class="section-title">Reflection</h3>
+                        <div class="reflection-prompts">
+                            <p class="reflection-prompt">What worked well when implementing these strategies?</p>
+                            <p class="reflection-prompt">What will I refine or adjust next time?</p>
+                            <p class="reflection-prompt">What questions do I still have about effective questioning?</p>
+                        </div>
+                        <textarea class="reflection-textarea" id="reflection-3" placeholder="Write your reflections here..." oninput="saveProgress()"></textarea>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="module-actions">
+                        <button class="btn btn-primary" onclick="saveModuleProgress(3)">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
+                            Save Progress
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Module 4: Guided Practice -->
+        <div class="module" data-module="4">
+            <div class="module-header" onclick="toggleModule(4)">
+                <div class="module-title-group">
+                    <div class="module-number">Module 4</div>
+                    <h2 class="module-title">Guided Practice</h2>
+                    <p class="module-description">Scaffolding student practice with support before releasing to independence</p>
+                </div>
+                <div class="module-toggle">
+                    <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                </div>
+            </div>
+            <div class="module-content">
+                <div class="module-inner">
+                    <!-- Key Learning -->
+                    <div class="section">
+                        <h3 class="section-title">Key Learning</h3>
+                        <div class="section-content">
+                            <p>Guided practice is the crucial bridge between teacher explanation and independent work. It's where students try out new skills with support, receive immediate feedback, and build the confidence needed to succeed alone.</p>
+                            <ul>
+                                <li><strong>Gradual release:</strong> Move from "I do" (teacher models) to "We do" (guided practice together) to "You do" (independent practice). Don't skip the middle step.</li>
+                                <li><strong>High success rate:</strong> During guided practice, students should be successful 80%+ of the time. If they're struggling significantly, you've moved too fast.</li>
+                                <li><strong>Active participation:</strong> Every student should be responding during guided practice—through mini-whiteboards, choral response, or written answers. Passive watching doesn't build skills.</li>
+                                <li><strong>Immediate feedback:</strong> Check responses as they happen and correct errors before they become embedded. The tighter the feedback loop, the better.</li>
+                            </ul>
+                            <p>Rushing through guided practice to get to independent work is a false economy. Time invested here prevents confusion, frustration, and misconceptions later.</p>
+                        </div>
+                    </div>
+
+                    <!-- Checklist -->
+                    <div class="section">
+                        <h3 class="section-title">Implementation Checklist</h3>
+                        <ul class="checklist">
+                            <li class="checklist-item">
+                                <input type="checkbox" id="m4-c1" onchange="saveProgress()">
+                                <label for="m4-c1">I include explicit guided practice in my lesson plans</label>
+                            </li>
+                            <li class="checklist-item">
+                                <input type="checkbox" id="m4-c2" onchange="saveProgress()">
+                                <label for="m4-c2">I use techniques that require all students to respond (whiteboards, etc.)</label>
+                            </li>
+                            <li class="checklist-item">
+                                <input type="checkbox" id="m4-c3" onchange="saveProgress()">
+                                <label for="m4-c3">I check student responses before moving on</label>
+                            </li>
+                            <li class="checklist-item">
+                                <input type="checkbox" id="m4-c4" onchange="saveProgress()">
+                                <label for="m4-c4">I provide immediate corrective feedback during practice</label>
+                            </li>
+                            <li class="checklist-item">
+                                <input type="checkbox" id="m4-c5" onchange="saveProgress()">
+                                <label for="m4-c5">I adjust the pace based on student success rate</label>
+                            </li>
+                            <li class="checklist-item">
+                                <input type="checkbox" id="m4-c6" onchange="saveProgress()">
+                                <label for="m4-c6">I only move to independent practice when students are ready</label>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Rehearsal Tasks -->
+                    <div class="section">
+                        <h3 class="section-title">Rehearsal Tasks</h3>
+                        <div class="task">
+                            <div class="task-number">Task 1</div>
+                            <div class="task-content">Plan a lesson using the "I do, We do, You do" structure explicitly. Time each phase and ensure guided practice takes at least as long as independent practice. Note how this affects student confidence.</div>
+                        </div>
+                        <div class="task">
+                            <div class="task-number">Task 2</div>
+                            <div class="task-content">Use mini-whiteboards for a whole guided practice segment. Ask students to hold up boards simultaneously so you can scan all responses. Practise giving quick corrective feedback ("I can see some of us wrote X—remember that...").</div>
+                        </div>
+                        <div class="task">
+                            <div class="task-number">Task 3</div>
+                            <div class="task-content">During your next guided practice, keep a mental note of success rate. If fewer than 80% of students are getting answers right, stop and reteach before continuing. Reflect on what this revealed about your initial explanation.</div>
+                        </div>
+                    </div>
+
+                    <!-- Reflection -->
+                    <div class="section">
+                        <h3 class="section-title">Reflection</h3>
+                        <div class="reflection-prompts">
+                            <p class="reflection-prompt">What worked well when implementing these strategies?</p>
+                            <p class="reflection-prompt">What will I refine or adjust next time?</p>
+                            <p class="reflection-prompt">What questions do I still have about guided practice?</p>
+                        </div>
+                        <textarea class="reflection-textarea" id="reflection-4" placeholder="Write your reflections here..." oninput="saveProgress()"></textarea>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="module-actions">
+                        <button class="btn btn-primary" onclick="saveModuleProgress(4)">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
+                            Save Progress
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Module 5: Independent Practice -->
+        <div class="module" data-module="5">
+            <div class="module-header" onclick="toggleModule(5)">
+                <div class="module-title-group">
+                    <div class="module-number">Module 5</div>
+                    <h2 class="module-title">Independent Practice</h2>
+                    <p class="module-description">Designing purposeful practice that builds fluency and long-term retention</p>
+                </div>
+                <div class="module-toggle">
+                    <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                </div>
+            </div>
+            <div class="module-content">
+                <div class="module-inner">
+                    <!-- Key Learning -->
+                    <div class="section">
+                        <h3 class="section-title">Key Learning</h3>
+                        <div class="section-content">
+                            <p>Independent practice is where learning is consolidated. It's the time when students apply what they've learned without scaffolding, building the fluency and automaticity that frees up working memory for higher-level thinking.</p>
+                            <ul>
+                                <li><strong>Purposeful design:</strong> Practice tasks should directly align with the lesson's learning objectives. Busy work doesn't equal learning.</li>
+                                <li><strong>Sufficient volume:</strong> Students need enough practice to develop fluency. One or two examples isn't enough—aim for deliberate repetition with slight variation.</li>
+                                <li><strong>Spaced practice:</strong> Don't just practise today's content. Interleave previous learning to strengthen long-term retention.</li>
+                                <li><strong>Active monitoring:</strong> Independent doesn't mean unmonitored. Circulate, observe, and provide targeted support where needed.</li>
+                            </ul>
+                            <p>The goal is not just completion but quality practice. Students should be thinking hard about the right things, not racing through tasks to finish first.</p>
+                        </div>
+                    </div>
+
+                    <!-- Checklist -->
+                    <div class="section">
+                        <h3 class="section-title">Implementation Checklist</h3>
+                        <ul class="checklist">
+                            <li class="checklist-item">
+                                <input type="checkbox" id="m5-c1" onchange="saveProgress()">
+                                <label for="m5-c1">My practice tasks directly match the lesson's learning objectives</label>
+                            </li>
+                            <li class="checklist-item">
+                                <input type="checkbox" id="m5-c2" onchange="saveProgress()">
+                                <label for="m5-c2">I provide sufficient practice volume for students to develop fluency</label>
+                            </li>
+                            <li class="checklist-item">
+                                <input type="checkbox" id="m5-c3" onchange="saveProgress()">
+                                <label for="m5-c3">I include review of previous learning in practice tasks</label>
+                            </li>
+                            <li class="checklist-item">
+                                <input type="checkbox" id="m5-c4" onchange="saveProgress()">
+                                <label for="m5-c4">I circulate and monitor during independent work</label>
+                            </li>
+                            <li class="checklist-item">
+                                <input type="checkbox" id="m5-c5" onchange="saveProgress()">
+                                <label for="m5-c5">I have extension tasks ready for students who finish early</label>
+                            </li>
+                            <li class="checklist-item">
+                                <input type="checkbox" id="m5-c6" onchange="saveProgress()">
+                                <label for="m5-c6">Students have clear expectations for what independent work looks like</label>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Rehearsal Tasks -->
+                    <div class="section">
+                        <h3 class="section-title">Rehearsal Tasks</h3>
+                        <div class="task">
+                            <div class="task-number">Task 1</div>
+                            <div class="task-content">Review a recent practice task you set. Ask: Does every question directly practise the skill I taught? Remove or replace any questions that don't align with the core learning objective.</div>
+                        </div>
+                        <div class="task">
+                            <div class="task-number">Task 2</div>
+                            <div class="task-content">Design a practice task that interleaves today's learning with two concepts from previous weeks. Observe whether students find the older content harder and plan accordingly for future review.</div>
+                        </div>
+                        <div class="task">
+                            <div class="task-number">Task 3</div>
+                            <div class="task-content">During independent practice, use a planned circulation route that takes you past every student at least twice. Keep brief notes on common errors you observe to address in the next lesson.</div>
+                        </div>
+                    </div>
+
+                    <!-- Reflection -->
+                    <div class="section">
+                        <h3 class="section-title">Reflection</h3>
+                        <div class="reflection-prompts">
+                            <p class="reflection-prompt">What worked well when implementing these strategies?</p>
+                            <p class="reflection-prompt">What will I refine or adjust next time?</p>
+                            <p class="reflection-prompt">What questions do I still have about independent practice?</p>
+                        </div>
+                        <textarea class="reflection-textarea" id="reflection-5" placeholder="Write your reflections here..." oninput="saveProgress()"></textarea>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="module-actions">
+                        <button class="btn btn-primary" onclick="saveModuleProgress(5)">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
+                            Save Progress
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Module 6: Feedback -->
+        <div class="module" data-module="6">
+            <div class="module-header" onclick="toggleModule(6)">
+                <div class="module-title-group">
+                    <div class="module-number">Module 6</div>
+                    <h2 class="module-title">Feedback</h2>
+                    <p class="module-description">Providing feedback that moves learning forward efficiently and effectively</p>
+                </div>
+                <div class="module-toggle">
+                    <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                </div>
+            </div>
+            <div class="module-content">
+                <div class="module-inner">
+                    <!-- Key Learning -->
+                    <div class="section">
+                        <h3 class="section-title">Key Learning</h3>
+                        <div class="section-content">
+                            <p>Feedback is only valuable if it leads to improved student work. The most impactful feedback is timely, specific, and actionable—and crucially, students must have the opportunity to act on it.</p>
+                            <ul>
+                                <li><strong>Focus on the work, not the person:</strong> Effective feedback addresses specific aspects of the work ("This paragraph needs a topic sentence") rather than the student ("You're not very good at paragraphs").</li>
+                                <li><strong>Less is more:</strong> One or two actionable points are better than a list of everything wrong. Prioritise the most impactful improvements.</li>
+                                <li><strong>Build in response time:</strong> Feedback without the opportunity to respond is largely wasted. Plan time for students to act on feedback immediately.</li>
+                                <li><strong>Verbal feedback is often better:</strong> A 30-second conversation can achieve more than 10 minutes of written comments—and is far more sustainable.</li>
+                            </ul>
+                            <p>Rethink feedback as an ongoing dialogue about how to improve, not as a one-time judgement delivered after the fact.</p>
+                        </div>
+                    </div>
+
+                    <!-- Checklist -->
+                    <div class="section">
+                        <h3 class="section-title">Implementation Checklist</h3>
+                        <ul class="checklist">
+                            <li class="checklist-item">
+                                <input type="checkbox" id="m6-c1" onchange="saveProgress()">
+                                <label for="m6-c1">My feedback focuses on specific, improvable aspects of work</label>
+                            </li>
+                            <li class="checklist-item">
+                                <input type="checkbox" id="m6-c2" onchange="saveProgress()">
+                                <label for="m6-c2">I limit feedback to 1-2 actionable points per piece of work</label>
+                            </li>
+                            <li class="checklist-item">
+                                <input type="checkbox" id="m6-c3" onchange="saveProgress()">
+                                <label for="m6-c3">I build in time for students to respond to feedback</label>
+                            </li>
+                            <li class="checklist-item">
+                                <input type="checkbox" id="m6-c4" onchange="saveProgress()">
+                                <label for="m6-c4">I use verbal feedback regularly during lessons</label>
+                            </li>
+                            <li class="checklist-item">
+                                <input type="checkbox" id="m6-c5" onchange="saveProgress()">
+                                <label for="m6-c5">I address whole-class misconceptions through live marking</label>
+                            </li>
+                            <li class="checklist-item">
+                                <input type="checkbox" id="m6-c6" onchange="saveProgress()">
+                                <label for="m6-c6">My feedback relates to the success criteria students were given</label>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Rehearsal Tasks -->
+                    <div class="section">
+                        <h3 class="section-title">Rehearsal Tasks</h3>
+                        <div class="task">
+                            <div class="task-number">Task 1</div>
+                            <div class="task-content">Collect a set of student work and identify the single most impactful improvement point for each student. Write feedback that addresses only this one point, with a clear action for the student to take.</div>
+                        </div>
+                        <div class="task">
+                            <div class="task-number">Task 2</div>
+                            <div class="task-content">Try "live marking" in your next lesson—circulate during independent practice and give brief verbal feedback to individuals. Aim for 8-10 quick interactions rather than lengthy conversations with 2-3 students.</div>
+                        </div>
+                        <div class="task">
+                            <div class="task-number">Task 3</div>
+                            <div class="task-content">After providing feedback, dedicate the first 10 minutes of the next lesson to "DIRT" (Directed Improvement and Reflection Time). Students respond to feedback immediately while it's still fresh. Observe the quality of improvements.</div>
+                        </div>
+                    </div>
+
+                    <!-- Reflection -->
+                    <div class="section">
+                        <h3 class="section-title">Reflection</h3>
+                        <div class="reflection-prompts">
+                            <p class="reflection-prompt">What worked well when implementing these strategies?</p>
+                            <p class="reflection-prompt">What will I refine or adjust next time?</p>
+                            <p class="reflection-prompt">What questions do I still have about effective feedback?</p>
+                        </div>
+                        <textarea class="reflection-textarea" id="reflection-6" placeholder="Write your reflections here..." oninput="saveProgress()"></textarea>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="module-actions">
+                        <button class="btn btn-primary" onclick="saveModuleProgress(6)">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
+                            Save Progress
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Module 7: Assessment for Learning -->
+        <div class="module" data-module="7">
+            <div class="module-header" onclick="toggleModule(7)">
+                <div class="module-title-group">
+                    <div class="module-number">Module 7</div>
+                    <h2 class="module-title">Assessment for Learning</h2>
+                    <p class="module-description">Using assessment to inform teaching and identify gaps before they widen</p>
+                </div>
+                <div class="module-toggle">
+                    <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                </div>
+            </div>
+            <div class="module-content">
+                <div class="module-inner">
+                    <!-- Key Learning -->
+                    <div class="section">
+                        <h3 class="section-title">Key Learning</h3>
+                        <div class="section-content">
+                            <p>Assessment for learning (AfL) is about gathering information to make teaching decisions in real-time. It answers the fundamental question: Do my students understand this well enough for me to move on?</p>
+                            <ul>
+                                <li><strong>Continuous, not occasional:</strong> AfL happens throughout every lesson, not just at the end of units. Every response is data about understanding.</li>
+                                <li><strong>Responsive teaching:</strong> The information you gather should change what you do next. If students don't understand, reteach before moving on.</li>
+                                <li><strong>Multiple methods:</strong> Use a range of techniques—questioning, mini-whiteboards, exit tickets, hinge questions—to get a clear picture of the whole class.</li>
+                                <li><strong>Focus on gaps:</strong> AfL helps identify the gap between where students are and where they need to be. Your job is to close that gap through targeted intervention.</li>
+                            </ul>
+                            <p>Effective AfL means no student gets left behind because misconceptions were identified and addressed before they compounded.</p>
+                        </div>
+                    </div>
+
+                    <!-- Checklist -->
+                    <div class="section">
+                        <h3 class="section-title">Implementation Checklist</h3>
+                        <ul class="checklist">
+                            <li class="checklist-item">
+                                <input type="checkbox" id="m7-c1" onchange="saveProgress()">
+                                <label for="m7-c1">I check for understanding multiple times during each lesson</label>
+                            </li>
+                            <li class="checklist-item">
+                                <input type="checkbox" id="m7-c2" onchange="saveProgress()">
+                                <label for="m7-c2">I use hinge questions at key points to assess readiness to progress</label>
+                            </li>
+                            <li class="checklist-item">
+                                <input type="checkbox" id="m7-c3" onchange="saveProgress()">
+                                <label for="m7-c3">I use exit tickets to identify gaps before the next lesson</label>
+                            </li>
+                            <li class="checklist-item">
+                                <input type="checkbox" id="m7-c4" onchange="saveProgress()">
+                                <label for="m7-c4">I adjust my teaching based on assessment information</label>
+                            </li>
+                            <li class="checklist-item">
+                                <input type="checkbox" id="m7-c5" onchange="saveProgress()">
+                                <label for="m7-c5">I share success criteria with students so they understand the goal</label>
+                            </li>
+                            <li class="checklist-item">
+                                <input type="checkbox" id="m7-c6" onchange="saveProgress()">
+                                <label for="m7-c6">I use low-stakes quizzing to boost retention and identify gaps</label>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Rehearsal Tasks -->
+                    <div class="section">
+                        <h3 class="section-title">Rehearsal Tasks</h3>
+                        <div class="task">
+                            <div class="task-number">Task 1</div>
+                            <div class="task-content">Design a "hinge question" for an upcoming lesson—a single question that will reveal whether students are ready to move on. Plan what you'll do if more than 20% get it wrong. Use it and reflect on what it revealed.</div>
+                        </div>
+                        <div class="task">
+                            <div class="task-number">Task 2</div>
+                            <div class="task-content">Implement exit tickets for one week. Ask one key question at the end of each lesson. Sort responses into "got it," "nearly there," and "need support." Use this to plan the start of your next lesson.</div>
+                        </div>
+                        <div class="task">
+                            <div class="task-number">Task 3</div>
+                            <div class="task-content">Create a low-stakes retrieval quiz covering content from the last three weeks. Include 5-8 questions mixing recent and older material. Use the results to identify which topics need revisiting.</div>
+                        </div>
+                    </div>
+
+                    <!-- Reflection -->
+                    <div class="section">
+                        <h3 class="section-title">Reflection</h3>
+                        <div class="reflection-prompts">
+                            <p class="reflection-prompt">What worked well when implementing these strategies?</p>
+                            <p class="reflection-prompt">What will I refine or adjust next time?</p>
+                            <p class="reflection-prompt">What questions do I still have about assessment for learning?</p>
+                        </div>
+                        <textarea class="reflection-textarea" id="reflection-7" placeholder="Write your reflections here..." oninput="saveProgress()"></textarea>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="module-actions">
+                        <button class="btn btn-primary" onclick="saveModuleProgress(7)">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
+                            Save Progress
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Module 8: Classroom Routines & Expectations -->
+        <div class="module" data-module="8">
+            <div class="module-header" onclick="toggleModule(8)">
+                <div class="module-title-group">
+                    <div class="module-number">Module 8</div>
+                    <h2 class="module-title">Classroom Routines & Expectations</h2>
+                    <p class="module-description">Building efficient routines that maximise learning time and reduce friction</p>
+                </div>
+                <div class="module-toggle">
+                    <svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>
+                </div>
+            </div>
+            <div class="module-content">
+                <div class="module-inner">
+                    <!-- Key Learning -->
+                    <div class="section">
+                        <h3 class="section-title">Key Learning</h3>
+                        <div class="section-content">
+                            <p>Effective routines are the invisible infrastructure of great classrooms. When transitions, materials distribution, and common procedures run smoothly, precious learning time is protected and cognitive load for both teacher and students is reduced.</p>
+                            <ul>
+                                <li><strong>Routines must be taught:</strong> Don't assume students know how to enter silently, get equipment, or transition between activities. Explicitly teach, model, and practise every routine.</li>
+                                <li><strong>Invest time upfront:</strong> Spending 10 minutes teaching a routine in week one saves hours across the year. Front-load this investment—it pays off exponentially.</li>
+                                <li><strong>Consistent enforcement:</strong> A routine only works if it's consistently expected. Every time you let a routine slide, you have to rebuild it.</li>
+                                <li><strong>Review and refine:</strong> Periodically assess whether routines are working. If a transition consistently takes too long, reteach it with higher expectations.</li>
+                            </ul>
+                            <p>The goal is automaticity—routines so embedded that they require no thought, freeing everyone to focus on learning.</p>
+                        </div>
+                    </div>
+
+                    <!-- Checklist -->
+                    <div class="section">
+                        <h3 class="section-title">Implementation Checklist</h3>
+                        <ul class="checklist">
+                            <li class="checklist-item">
+                                <input type="checkbox" id="m8-c1" onchange="saveProgress()">
+                                <label for="m8-c1">I have a clear entry routine that students follow consistently</label>
+                            </li>
+                            <li class="checklist-item">
+                                <input type="checkbox" id="m8-c2" onchange="saveProgress()">
+                                <label for="m8-c2">Transitions between activities take less than 30 seconds</label>
+                            </li>
+                            <li class="checklist-item">
+                                <input type="checkbox" id="m8-c3" onchange="saveProgress()">
+                                <label for="m8-c3">Equipment distribution happens efficiently without fuss</label>
+                            </li>
+                            <li class="checklist-item">
+                                <input type="checkbox" id="m8-c4" onchange="saveProgress()">
+                                <label for="m8-c4">Students know exactly what to do if they finish early</label>
+                            </li>
+                            <li class="checklist-item">
+                                <input type="checkbox" id="m8-c5" onchange="saveProgress()">
+                                <label for="m8-c5">I have a clear procedure for how students ask for help</label>
+                            </li>
+                            <li class="checklist-item">
+                                <input type="checkbox" id="m8-c6" onchange="saveProgress()">
+                                <label for="m8-c6">My exit routine ensures a calm, orderly end to lessons</label>
+                            </li>
+                            <li class="checklist-item">
+                                <input type="checkbox" id="m8-c7" onchange="saveProgress()">
+                                <label for="m8-c7">I reteach routines when they start to slip</label>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Rehearsal Tasks -->
+                    <div class="section">
+                        <h3 class="section-title">Rehearsal Tasks</h3>
+                        <div class="task">
+                            <div class="task-number">Task 1</div>
+                            <div class="task-content">Map out every transition in a typical lesson. Time each one over three consecutive lessons. Identify the slowest transition and create a specific, teachable routine to speed it up. Reteach it explicitly to students.</div>
+                        </div>
+                        <div class="task">
+                            <div class="task-number">Task 2</div>
+                            <div class="task-content">Create a "Do Now" routine for lesson starts—a task on the board that students begin immediately upon entry without teacher instruction. Practise this for a week, refining until students are working within 60 seconds of entering.</div>
+                        </div>
+                        <div class="task">
+                            <div class="task-number">Task 3</div>
+                            <div class="task-content">Identify one routine that has been slipping recently. Plan a 5-minute reteach session: explain the routine, model it, have students practise it, then reset expectations. Notice the impact over the following week.</div>
+                        </div>
+                    </div>
+
+                    <!-- Reflection -->
+                    <div class="section">
+                        <h3 class="section-title">Reflection</h3>
+                        <div class="reflection-prompts">
+                            <p class="reflection-prompt">What worked well when implementing these strategies?</p>
+                            <p class="reflection-prompt">What will I refine or adjust next time?</p>
+                            <p class="reflection-prompt">What questions do I still have about routines and expectations?</p>
+                        </div>
+                        <textarea class="reflection-textarea" id="reflection-8" placeholder="Write your reflections here..." oninput="saveProgress()"></textarea>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="module-actions">
+                        <button class="btn btn-primary" onclick="saveModuleProgress(8)">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
+                            Save Progress
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>Teacher Development Programme — Incremental improvement through focused practice</p>
+    </footer>
+
+    <!-- Save Notification -->
+    <div class="save-notification" id="save-notification">
+        ✓ Progress saved successfully
+    </div>
+
+    <!-- ==================== JavaScript ==================== -->
+    <script>
+        // ==================== Module Toggle Functionality ====================
+        function toggleModule(moduleNumber) {
+            const module = document.querySelector(.module[data-module="${moduleNumber}"]);
+            const wasActive = module.classList.contains('active');
+            
+            // Close all modules first (accordion behavior)
+            document.querySelectorAll('.module').forEach(m => {
+                m.classList.remove('active');
+            });
+            
+            // If the clicked module wasn't active, open it
+            if (!wasActive) {
+                module.classList.add('active');
+            }
+        }
+
+        // ==================== Local Storage Functions ====================
+        const STORAGEKEY = 'teacherDevProgress';
+
+        // Load saved progress from localStorage
+        function loadProgress() {
+            const savedData = localStorage.getItem(STORAGEKEY);
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                
+                // Restore checkbox states
+                if (data.checkboxes) {
+                    Object.keys(data.checkboxes).forEach(id => {
+                        const checkbox = document.getElementById(id);
+                        if (checkbox) {
+                            checkbox.checked = data.checkboxes[id];
+                            updateChecklistItemStyle(checkbox);
+                        }
+                    });
+                }
+                
+                // Restore reflection text
+                if (data.reflections) {
+                    Object.keys(data.reflections).forEach(id => {
+                        const textarea = document.getElementById(id);
+                        if (textarea) {
+                            textarea.value = data.reflections[id];
+                        }
+                    });
+                }
+            }
+            
+            // Update progress display
+            updateOverallProgress();
+        }
+
+        // Save current progress to localStorage
+        function saveProgress() {
+            const data = {
+                checkboxes: {},
+                reflections: {},
+                lastSaved: new Date().toISOString()
+            };
+            
+            // Gather checkbox states
+            document.querySelectorAll('.checklist-item input[type="checkbox"]').forEach(checkbox => {
+                data.checkboxes[checkbox.id] = checkbox.checked;
+                updateChecklistItemStyle(checkbox);
+            });
+            
+            // Gather reflection text
+            document.querySelectorAll('.reflection-textarea').forEach(textarea => {
+                data.reflections[textarea.id] = textarea.value;
+            });
+            
+            localStorage.setItem(STORAGEKEY, JSON.stringify(data));
+            updateOverallProgress();
+        }
+
+        // Update visual style of checklist item based on checkbox state
+        function updateChecklistItemStyle(checkbox) {
+            const listItem = checkbox.closest('.checklist-item');
+            if (checkbox.checked) {
+                listItem.classList.add('completed');
+            } else {
+                listItem.classList.remove('completed');
+            }
+        }
+
+        // Save progress for a specific module (with notification)
+        function saveModuleProgress(moduleNumber) {
+            saveProgress();
+            showSaveNotification();
+        }
+
+        // Show save notification
+        function showSaveNotification() {
+            const notification = document.getElementById('save-notification');
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 2000);
+        }
+
+        // Calculate and update overall progress
+        function updateOverallProgress() {
+            const allCheckboxes = document.querySelectorAll('.checklist-item input[type="checkbox"]');
+            const checkedCount = document.querySelectorAll('.checklist-item input[type="checkbox"]:checked').length;
+            const totalCount = allCheckboxes.length;
+            
+            const percentage = totalCount > 0 ? Math.round((checkedCount / totalCount)  100) : 0;
+            
+            document.getElementById('overall-progress').textContent = percentage + '%';
+            document.getElementById('progress-bar').style.width = percentage + '%';
+        }
+
+        // Clear all progress
+        function clearAllProgress() {
+            if (confirm('Are you sure you want to reset all progress? This cannot be undone.')) {
+                localStorage.removeItem(STORAGEKEY);
+                
+                // Reset all checkboxes
+                document.querySelectorAll('.checklist-item input[type="checkbox"]').forEach(checkbox => {
+                    checkbox.checked = false;
+                    updateChecklistItemStyle(checkbox);
+                });
+                
+                // Reset all reflections
+                document.querySelectorAll('.reflection-textarea').forEach(textarea => {
+                    textarea.value = '';
+                });
+                
+                updateOverallProgress();
+                showSaveNotification();
+            }
+        }
+
+        // ==================== Checklist Item Click Handling ====================
+        document.querySelectorAll('.checklist-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                // If the click wasn't on the checkbox itself, toggle the checkbox
+                if (e.target.type !== 'checkbox') {
+                    const checkbox = this.querySelector('input[type="checkbox"]');
+                    checkbox.checked = !checkbox.checked;
+                    saveProgress();
+                }
+            });
+        });
+
+        // ==================== Initialize on Page Load ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProgress();
+        });
+    </script>
+</body>
+</html>
+``
